@@ -12,7 +12,7 @@ func IsRealItem(s string) bool {
 	if err != nil {
 	}
 
-	if !(tempFile.Size() == 66) {
+	if !(tempFile.Size() <= 66) {
 		return true
 	}
 	return false

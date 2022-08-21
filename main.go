@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"github.com/robfig/cron/v3"
 	listBot "grog-bot/bot/list"
 	stockBot "grog-bot/bot/stock"
 	"grog-bot/config"
+	stockTest "grog-bot/stock/test"
 	"log"
 	"time"
 )
@@ -16,14 +18,18 @@ func main() {
 		return
 	}
 
-	c := cron.New()
-	c.AddFunc("@every 5m", stockBotFunc)
-	c.Start()
+	if isSiteUp() {
+		fmt.Println("Grog is alive 🍻")
+		c := cron.New()
+		c.AddFunc("@every 5m", stockBotFunc)
+		c.Start()
 
-	listBot.Run()
-	<-make(chan struct{})
-	return
-
+		listBot.Run()
+		<-make(chan struct{})
+		return
+	} else {
+		fmt.Println("Grog is dead 😭")
+	}
 }
 
 func stockBotFunc() {
@@ -32,4 +38,8 @@ func stockBotFunc() {
 		stockBot.Run()
 		return
 	}
+}
+
+func isSiteUp() bool {
+	return stockTest.IsRealItem(config.TestSKU)
 }
