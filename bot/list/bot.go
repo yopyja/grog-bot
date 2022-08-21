@@ -96,7 +96,7 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 				_, _ = s.ChannelMessageSend(config.General, "This cmd is under construction")
 
 				//	Force stock update
-			} else if strings.HasPrefix(m.Content, config.Prefix+"force") && m.Author.ID == "415323097139380224" {
+			} else if strings.HasPrefix(m.Content, config.Prefix+"force") && m.Author.ID == config.OwnerID {
 				stock.StockRunner()
 
 				messageFile, err := os.Open("./json/message.json")
@@ -107,22 +107,22 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 				byteValueDrink, _ := io.ReadAll(messageFile)
 				var messages stockMessage
 				json.Unmarshal(byteValueDrink, &messages)
-
-				for i := 0; i < len(messages.Message); i++ {
-					c := strings.Split(messages.Message[i], "||")
-					var messageEmbed = discordgo.MessageEmbed{
-						Title:       c[0],
-						Description: c[1],
-						Color:       0x6aa84f,
-						URL:         c[2],
-						Thumbnail: &discordgo.MessageEmbedThumbnail{
-							URL: "https://webapps2.abc.utah.gov/ProdApps/ProductLocatorCore/images/DABS_Logo_StateOnly_WH_TB.png",
-						},
+				if len(messages.Message) > 0 {
+					_, _ = s.ChannelMessageSend(config.General, "<@&" + config.RoleID + ">")
+					for i := 0; i < len(messages.Message); i++ {
+						c := strings.Split(messages.Message[i], "||")
+						var messageEmbed = discordgo.MessageEmbed{
+							Title:       c[0],
+							Description: c[1],
+							Color:       0x6aa84f,
+							URL:         c[2],
+							Thumbnail: &discordgo.MessageEmbedThumbnail{
+								URL: "https://webapps2.abc.utah.gov/ProdApps/ProductLocatorCore/images/DABS_Logo_StateOnly_WH_TB.png",
+							},
+						}
+						_, _ = s.ChannelMessageSendEmbed(config.General, &messageEmbed)
 					}
-					_, _ = s.ChannelMessageSendEmbed(config.General, &messageEmbed)
 				}
-
-				_, _ = s.ChannelMessageSend(config.General, "Forced stock refresh finished (do not spam this)")
 
 				// Invalid Command Dingus
 			} else {

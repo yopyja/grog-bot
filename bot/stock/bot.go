@@ -41,6 +41,10 @@ func Run() {
 	var messages stockMessage
 	json.Unmarshal(byteValueDrink, &messages)
 
+	if len(messages.Message) > 0 {
+		goBot.ChannelMessageSend(config.General, "@Watcher")
+	}
+
 	for i := 0; i < len(messages.Message); i++ {
 		c := strings.Split(messages.Message[i], "||")
 		var messageEmbed = discordgo.MessageEmbed{

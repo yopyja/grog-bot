@@ -11,6 +11,8 @@ var (
 	Prefix  string
 	General string
 	ItemURL string
+	OwnerID string
+	RoleID string
 	config  *configStruct
 )
 
@@ -19,6 +21,8 @@ type configStruct struct {
 	Prefix  string `json:"prefix"`
 	General string `json:"general"`
 	ItemURL string `json:"itemURL"`
+	OwnerID string `json:"ownerID"`
+	RoleID string `json;"roleID"`
 }
 
 func ReadConfig() error {
@@ -36,6 +40,8 @@ func ReadConfig() error {
 	Prefix = config.Prefix
 	General = config.General
 	ItemURL = config.ItemURL
+	OwnerID = config.OwnerID
+	RoleID = config.RoleID
 
 	return nil
 }
