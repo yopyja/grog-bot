@@ -42,21 +42,17 @@ func Run() {
 	json.Unmarshal(byteValueDrink, &messages)
 
 	if len(messages.Message) > 0 {
-		goBot.ChannelMessageSend(config.General, "@Watcher")
-	}
-
-	for i := 0; i < len(messages.Message); i++ {
-		c := strings.Split(messages.Message[i], "||")
-		var messageEmbed = discordgo.MessageEmbed{
-			Title:       c[0],
-			Description: c[1],
-			Color:       0x6aa84f,
-			URL:         c[2],
-			Thumbnail: &discordgo.MessageEmbedThumbnail{
-				URL: "https://webapps2.abc.utah.gov/ProdApps/ProductLocatorCore/images/DABS_Logo_StateOnly_WH_TB.png",
-			},
+		goBot.ChannelMessageSend(config.General, "<@&"+config.RoleID+">")
+		for i := 0; i < len(messages.Message); i++ {
+			c := strings.Split(messages.Message[i], "||")
+			var messageEmbed = discordgo.MessageEmbed{
+				Title:       c[0],
+				Description: c[1],
+				Color:       0x6aa84f,
+				URL:         c[2],
+			}
+			goBot.ChannelMessageSendEmbed(config.General, &messageEmbed)
 		}
-		goBot.ChannelMessageSendEmbed(config.General, &messageEmbed)
 	}
 
 	BotID = user.ID

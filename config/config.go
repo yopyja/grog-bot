@@ -23,7 +23,10 @@ var (
 	Origin  string
 	Referer string
 	Payload []string
-	config  *configStruct
+
+	Counter int
+
+	config *configStruct
 )
 
 type configStruct struct {
@@ -43,6 +46,8 @@ type configStruct struct {
 	Origin  string   `json:"origin"`
 	Referer string   `json:"referer"`
 	Payload []string `json:"payload"`
+
+	Counter int `json:"counter"`
 }
 
 func ReadConfig() error {
@@ -72,5 +77,8 @@ func ReadConfig() error {
 	Origin = config.Origin
 	Referer = config.Referer
 	Payload = config.Payload
+
+	Counter = config.Counter
+
 	return nil
 }

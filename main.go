@@ -18,28 +18,40 @@ func main() {
 		return
 	}
 
-	if isSiteUp() {
-		fmt.Println("Grog is alive 🍻")
+	if healthCheck() {
+		fmt.Println("Health Check Passed")
 		c := cron.New()
-		c.AddFunc("@every 5m", stockBotFunc)
+		c.AddFunc("@every 1m", stockBotFunc)
 		c.Start()
 
 		listBot.Run()
 		<-make(chan struct{})
 		return
 	} else {
-		fmt.Println("Grog is dead 😭")
-	}
-}
-
-func stockBotFunc() {
-	time := time.Now().Hour()
-	if (time > 10) && (time < 18) {
-		stockBot.Run()
+		fmt.Println("Health Check Failed")
 		return
 	}
 }
 
-func isSiteUp() bool {
+func stockBotFunc() {
+	if config.Counter == 5 {
+		weekday := time.Now().Weekday()
+		if weekday != 0 {
+			hour := time.Now().Hour()
+			if (hour >= 10) && (hour < 18) {
+				config.Counter = 0
+				stockBot.Run()
+				return
+			}
+			return
+		}
+		return
+	} else {
+		config.Counter++
+		return
+	}
+}
+
+func healthCheck() bool {
 	return stockTest.IsRealItem(config.TestSKU)
 }
